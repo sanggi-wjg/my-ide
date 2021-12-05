@@ -5,6 +5,11 @@ class DockersAppException(Exception):
 class DockerfileIsNotExist(DockersAppException):
     pass
 
+class DockerImageIsNotExist(DockersAppException):
+    pass
+
+class DockerImageDuplicateExist(DockersAppException):
+    pass
 
 def brief_except():
     import sys

@@ -28,11 +28,16 @@ class Command(BaseCommand):
                 logging.error(brief_except())
 
     def try_build_dockerfile(self, data: dict):
+        # get dockerfile info
         image = DockerImage.objects.publish(data['image_name'], data['image_tag'])
         dirpath, filepath = get_dockerfile_path(f"{image.image_name}-{image.image_tag}")
         dockerfile_info = DockerfileInfo(dirpath, filepath, image.image_name, image.image_tag)
         logging.info(f"Try build Dockerfile : {dockerfile_info}")
 
+        # build dockerfile
         client = MyDockerClient()
         result = client.build_dockerfile(dockerfile_info)
-        DockerImage.objects.update_build_image_result(image.id, ''.join(result))
+
+        # Check success or fail, then update.
+        is_success = client.is_exist_docker_image_by_name(f"{image.image_name}-{image.image_tag}")
+        DockerImage.objects.update_build_image_result(image.id, ''.join(result), is_success)
