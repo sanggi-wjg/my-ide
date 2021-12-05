@@ -20,10 +20,10 @@ class ExecuteCodeTestCase(TestCase):
         from io import StringIO
         import sys
 
-        codeOut = StringIO()
-        codeErr = StringIO()
-        sys.stdout = codeOut
-        sys.stderr = codeErr
+        code_output = StringIO()
+        code_error = StringIO()
+        sys.stdout = code_output
+        sys.stderr = code_error
 
         sample_code = "print('hello world')"
         exec(sample_code)
@@ -31,5 +31,5 @@ class ExecuteCodeTestCase(TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-        print(f"error: {codeErr.getvalue()}")
-        print(f"output: {codeOut.getvalue()}")
+        print(f"error: {code_error.getvalue()}")
+        print(f"output: {code_output.getvalue()}")

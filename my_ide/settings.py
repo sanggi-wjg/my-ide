@@ -9,17 +9,26 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import json
+import logging
 import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+def read_json(path):
+    with open(path) as json_file:
+        json_data = json.load(json_file)
+        return json_data
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-78y4u062wbp3a)as$igj*9zh(yg@l-k2k2lwe9_now9tbgl8(1'
+SECRET_KEY = read_json(os.path.join(BASE_DIR, 'my_ide', 'secret_key.json'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -128,3 +137,38 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+root = logging.getLogger()
+root.setLevel('DEBUG')
+
+LOGGING = {
+    'version'                 : 1,
+    'disable_existing_loggers': False,
+    'formatters'              : {
+        'basic': {
+            'format': '[%(levelname)s] [%(asctime)s] (%(name)s) %(message)s'
+        }
+    },
+    'handlers'                : {
+        'console': {
+            'level'    : os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'class'    : 'logging.StreamHandler',
+            'formatter': 'basic',
+        },
+    },
+    'root'                    : {
+        'level'   : os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        'handlers': ['console'],
+    },
+    'loggers'                 : {
+        'django': {
+            'level'    : os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'handlers' : ['console'],
+            'propagate': False,
+        },
+    },
+}
+
+DOCKERFILES_ROOT = os.path.join(BASE_DIR, "dockerfiles")
+DOCKERS_PATH = os.path.join(DOCKERFILES_ROOT, "dockers.json")
+DOCKERS = read_json(DOCKERS_PATH)
