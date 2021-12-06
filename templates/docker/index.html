@@ -13,19 +13,54 @@
     <div>
         <select>
             <option>Python 2.7</option>
-            <option>Python 3.8</option>
+            <option selected>Python 3.8</option>
         </select>
+        <br>
 
         <label for="user-code"></label>
-        <textarea id="user-code"></textarea><br>
+        <textarea id="user-code" rows="10"></textarea>
+        <br>
         <input type="button" id="btn-user-code-run" value="RUN">
     </div>
 
     <h3>USER_CODE_RUN_RESULT</h3>
-    <div id="user-code-run-result">
+    <pre id="user-code-run-result">
 
-    </div>
+    </pre>
 </div>
+
+
+{% csrf_token %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+    const CSRF_TOKEN = $("input[name=csrfmiddlewaretoken]").val();
+
+    $("input#btn-user-code-run").click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '{% url 'code-run' %}',
+            accept: 'application/json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', CSRF_TOKEN)
+            },
+            data: {
+                code: document.getElementById("user-code").value
+            },
+            statusCode: {
+                200: function (response) {
+                    console.log(response);
+                    let result = response.data.output + "<br>" + response.data.error;
+                    $("pre#user-code-run-result").html(result)
+                },
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR)
+                console.error(textStatus)
+                console.error(errorThrown)
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

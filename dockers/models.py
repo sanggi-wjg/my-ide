@@ -1,15 +1,31 @@
 from django.db import models
 from django.db.models import QuerySet
 
+from dockers.module.docker_vo import DockerJson
+
 
 class DockerImageQuerySet(models.QuerySet):
 
-    def publish(self, image_name: str, image_tag: str) -> QuerySet['DockerImage']:
+    def get_image_build_success(self, docker_json: DockerJson) -> QuerySet['DockerImage']:
         try:
-            result = self.get(image_name = image_name, image_tag = image_tag)
+            self.get(image_name = docker_json.image_name, image_tag = docker_json.image_tag)
+            image = self.filter(image_name = docker_json.image_name, image_tag = docker_json.image_tag)
+        except DockerImage.DoesNotExist as e:
+            raise Exception(f"{docker_json.image_name}-{docker_json.image_tag} is not exist")
+
+        try:
+            image = image.get(build_image_success = True)
+        except DockerImage.DoesNotExist as e:
+            raise Exception(f"{docker_json.image_name}-{docker_json.image_tag} is not build success")
+
+        return image
+
+    def publish(self, docker_json: DockerJson) -> QuerySet['DockerImage']:
+        try:
+            image = self.get(image_name = docker_json.image_name, image_tag = docker_json.image_tag)
         except DockerImage.DoesNotExist:
-            result = self.create(image_name = image_name, image_tag = image_tag)
-        return result
+            image = self.create(image_name = docker_json.image_name, image_tag = docker_json.image_tag, local_port = docker_json.local_port)
+        return image
 
     def update_build_image_result(self, image_id: int, result: str, is_success: bool):
         rows = self.filter(
@@ -30,13 +46,17 @@ class DockerImage(models.Model):
         (BUILD_SUCCESS, 'Success'), (BUILD_FAILED, 'Failed')
     ]
 
-    image_name = models.CharField(max_length = 100, )
-    image_tag = models.CharField(max_length = 100, )
+    image_name = models.CharField(max_length = 100)
+    image_tag = models.CharField(max_length = 100)
+    local_port = models.IntegerField(default = 9090)
+
     build_image_result = models.TextField(null = True, default = None)
     build_image_success = models.IntegerField(null = False, default = BUILD_FAILED, choices = BUILD_IMAGE_SUCCESS_CHOICES)
+
+    container_is_running = models.IntegerField(null = False, default = BUILD_FAILED, choices = BUILD_IMAGE_SUCCESS_CHOICES)
 
     class Meta:
         unique_together = (('image_name', 'image_tag'),)
 
     def __str__(self):
-        return f"<DockerImage object {self.id}> {self.image_name} - {self.image_tag} build: {self.build_image_success}"
+        return f"<DockerImage object {self.id}> {self.image_name} - {self.image_tag} build: {self.build_image_success} running: {self.container_is_running}"

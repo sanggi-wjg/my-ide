@@ -2,13 +2,13 @@ import os
 from typing import Tuple, List
 
 from dockers.exceptions import DockerfileIsNotExist
-from dockers.module.docker_vo import Dockers
+from dockers.module.docker_vo import DockerJson
 from my_ide.settings import DOCKERFILES_ROOT, DOCKERS
 
 
-def get_dockers() -> List[Dockers]:
+def get_dockers_json() -> List[DockerJson]:
     return [
-        Dockers(d['image_name'], d['image_tag'], d['local_port'])
+        DockerJson(d['image_name'], d['image_tag'], d['local_port'])
         for d in DOCKERS
     ]
 

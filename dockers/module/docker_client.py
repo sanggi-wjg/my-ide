@@ -1,7 +1,10 @@
+from typing import Tuple, Iterable
+
 import docker
 from docker.models.images import Image
 
 from dockers.exceptions import DockerImageIsNotExist, DockerImageDuplicateExist
+from dockers.models import DockerImage
 from dockers.module.docker_vo import DockerfileInfo
 
 
@@ -14,11 +17,12 @@ class MyDockerClient:
             self.base_url = base_url
         self.client = docker.DockerClient(base_url = self.base_url)
 
-    def build_dockerfile(self, dockerfile: DockerfileInfo) -> list:
-        return [line.decode('utf-8') for line in self.client.images.build(
+    def build_dockerfile(self, dockerfile: DockerfileInfo) -> Tuple[Image, str]:
+        result: Tuple[Image, Iterable] = self.client.images.build(
             path = dockerfile.dirpath, dockerfile = dockerfile.filepath,
             rm = True, tag = f"{dockerfile.image_name}-{dockerfile.image_tag}"
-        )]
+        )
+        return result[0], ''.join([r.get('stream', '') for r in result[1]])
 
     def is_exist_docker_image_by_name(self, name: str):
         try:
@@ -51,13 +55,15 @@ class MyDockerClient:
 
         return images.pop()
 
-    def create_container_and_run(self, name: str, port: list):
+    def create_container_and_run(self, image: DockerImage):
         try:
+            name = f"{image.image_name}-{image.image_tag}"
+
             container = self.client.api.create_container(
                 image = name, detach = True, name = name,
-                ports = port,
+                ports = [image.local_port],
                 host_config = self.client.api.create_host_config(port_bindings = {
-                    port: ('127.0.0.1', port)
+                    image.local_port: ('127.0.0.1', image.local_port)
                 })
             )
         except docker.errors.ImageNotFound as e:

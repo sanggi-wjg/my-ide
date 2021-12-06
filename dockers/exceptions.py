@@ -1,14 +1,16 @@
 class DockersAppException(Exception):
     pass
 
-
-class DockerfileIsNotExist(DockersAppException):
+class DockersModuleException(DockersAppException):
     pass
 
-class DockerImageIsNotExist(DockersAppException):
+class DockerfileIsNotExist(DockersModuleException):
     pass
 
-class DockerImageDuplicateExist(DockersAppException):
+class DockerImageIsNotExist(DockersModuleException):
+    pass
+
+class DockerImageDuplicateExist(DockersModuleException):
     pass
 
 def brief_except():

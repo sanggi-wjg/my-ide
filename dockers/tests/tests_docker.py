@@ -8,7 +8,6 @@ class DockerTestCase(TestCase):
     python manage.py test dockers.tests.tests_docker
     """
 
-    @skipIf(True, 'tested')
     def test_build_dockerfile(self):
         from dockers.module.docker_client import MyDockerClient
         from my_ide.settings import DOCKERFILES_ROOT
@@ -22,8 +21,7 @@ class DockerTestCase(TestCase):
         )
         client = MyDockerClient()
         result = client.build_dockerfile(dockerfile_info)
-        for r in result:
-            print(r)
+        print(result)
 
     @skipIf(True, 'tested')
     def test_get_docker_image_by_name(self):
