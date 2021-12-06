@@ -2,6 +2,6 @@
   {
     "image_name": "python",
     "image_tag": "3.8",
-    "port": 5000
+    "local_port": 5000
   }
 ]

@@ -5,6 +5,11 @@ DockerfileInfo = namedtuple(
     ['dirpath', 'filepath', 'image_name', 'image_tag']
 )
 
+Dockers = namedtuple(
+    'Dockers.json',
+    ['image_name', 'image_tag', 'local_port']
+)
+
 # class DockerfileInfo(object):
 #
 #     def __init__(self):
