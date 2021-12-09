@@ -12,11 +12,10 @@ def crate_dockerfile_info(image: DockerImage) -> DockerfileInfo:
     return dockerfile_info
 
 
-def try_build_dockerfile(docker_json: DockerJson):
+def build_dockerfile(docker_json: DockerJson):
     # get dockerfile info
     image = DockerImage.objects.publish(docker_json)
     dockerfile_info = crate_dockerfile_info(image)
-    logging.info(f"Dockerfile Info : {dockerfile_info}")
 
     # build dockerfile
     client = MyDockerClient()
@@ -25,9 +24,11 @@ def try_build_dockerfile(docker_json: DockerJson):
     # Check success or fail, then update.
     is_success = client.is_exist_docker_image_by_name(f"{image.image_name}-{image.image_tag}")
     DockerImage.objects.update_build_image_result(image.id, result[1], is_success)
-    logging.info(f"Try Build Dockerfile : {is_success}\n{result}")
+    if not is_success:
+        logging.error(f"{dockerfile_info} build failed")
 
 
-def try_run_docker_image(image: DockerImage):
+def run_docker_image(image: DockerImage):
     client = MyDockerClient()
-    client.create_container_and_run(image)
+    is_success = client.create_container_and_run(image)
+    DockerImage.objects.update_container_running_result(image.id, is_success)

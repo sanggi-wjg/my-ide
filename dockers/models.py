@@ -36,6 +36,14 @@ class DockerImageQuerySet(models.QuerySet):
         )
         return rows
 
+    def update_container_running_result(self, image_id: int, is_success: bool):
+        rows = self.filter(
+            id = image_id
+        ).update(
+            container_is_running = is_success
+        )
+        return rows
+
 
 class DockerImage(models.Model):
     objects = DockerImageQuerySet.as_manager()
@@ -48,7 +56,7 @@ class DockerImage(models.Model):
 
     image_name = models.CharField(max_length = 100)
     image_tag = models.CharField(max_length = 100)
-    local_port = models.IntegerField(default = 9090)
+    local_port = models.IntegerField(default = 0)
 
     build_image_result = models.TextField(null = True, default = None)
     build_image_success = models.IntegerField(null = False, default = BUILD_FAILED, choices = BUILD_IMAGE_SUCCESS_CHOICES)

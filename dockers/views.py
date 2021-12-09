@@ -1,10 +1,7 @@
-import logging
-
 import requests
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 
-# Create your views here.
 from django.views import View
 
 from dockers.module.docker_client import MyDockerClient
@@ -16,7 +13,7 @@ class DockerIndexView(View):
         return render(request, 'docker/index.html')
 
 
-class CodeRunView(View):
+class DockerCodeRunView(View):
 
     def post(self, request, **kwargs):
         user_language = request.POST.get('user_language')

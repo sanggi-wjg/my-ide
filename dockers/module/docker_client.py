@@ -1,9 +1,10 @@
+import logging
 from typing import Tuple, Iterable, Any
 
 import docker
 from docker.models.images import Image
 
-from dockers.exceptions import DockerImageIsNotExist, DockerImageDuplicateExist
+from dockers.exceptions import DockerImageIsNotExist, DockerImageDuplicateExist, brief_except
 from dockers.models import DockerImage
 from dockers.module.docker_vo import DockerfileInfo
 
@@ -18,6 +19,8 @@ class MyDockerClient:
         self.client = docker.DockerClient(base_url = self.base_url)
 
     def build_dockerfile(self, dockerfile: DockerfileInfo) -> Tuple[Image, str]:
+        logging.info(f"Build dockerfile : {dockerfile}")
+
         result: Tuple[Image, Iterable] = self.client.images.build(
             path = dockerfile.dirpath, dockerfile = dockerfile.filepath,
             rm = True, tag = f"{dockerfile.image_name}-{dockerfile.image_tag}"
@@ -29,9 +32,11 @@ class MyDockerClient:
             image = self.client.images.get(name)
         except docker.errors.ImageNotFound:
             # If the image does not exist.
+            logging.error(f"{name} image is not exist")
             raise DockerImageIsNotExist(f"{name} image is not exist")
         except docker.errors.APIError as e:
             # If the server returns an error.
+            logging.critical(brief_except())
             raise e
 
         if image.tags.pop().replace(":latest", '') == name:
@@ -49,28 +54,39 @@ class MyDockerClient:
     def get_docker_image_by_name(self, name: str) -> Image:
         images = self.get_docker_images(name)
         if len(images) == 0:
+            logging.error(f"{name} image is not exist")
             raise DockerImageIsNotExist(f"{name} image is not exist")
         if len(images) > 1:
+            logging.error(f"{name} image duplicated")
             raise DockerImageDuplicateExist(f"{name} image duplicated")
 
         return images.pop()
 
-    def create_container_and_run(self, image: DockerImage):
-        try:
-            name = f"{image.image_name}-{image.image_tag}"
+    def get_create_host_config(self, port: int) -> dict:
+        return self.client.api.create_host_config(port_bindings = {
+            port: ('127.0.0.1', port)
+        })
 
-            container = self.client.api.create_container(
-                image = name, detach = True, name = name,
-                ports = [image.local_port],
-                host_config = self.client.api.create_host_config(port_bindings = {
-                    image.local_port: ('127.0.0.1', image.local_port)
-                })
-            )
+    def create_container_and_run(self, image: DockerImage):
+        name = f"{image.image_name}-{image.image_tag}"
+        try:
+            logging.info(f"Docker run image : {name}")
+
+            if image.local_port:
+                container = self.client.api.create_container(
+                    image = name, detach = True, name = name, ports = [image.local_port],
+                    host_config = self.get_create_host_config(image.local_port)
+                )
+            else:
+                container = self.client.api.create_container(image = name, detach = True, name = name)
+
         except docker.errors.ImageNotFound as e:
             # If the specified image does not exist.
+            logging.error(f"{name} image is not exist")
             raise DockerImageIsNotExist(f"{name} image is not exist")
         except docker.errors.APIError as e:
             # If the server returns an error.
+            logging.critical(brief_except())
             raise e
 
         try:
@@ -78,11 +94,14 @@ class MyDockerClient:
         except (docker.errors.APIError, docker.errors.DeprecatedMethod) as e:
             # If the server returns an error.
             # If any argument besides ``container`` are provided.
+            logging.critical(brief_except())
             raise e
+
+        return True
 
     def exec_run_container(self, name: str, cmd: str):
         # conn = self.get_docker_image_by_name(name)
-        container = self.client.containers.list(filters = { 'name': 'python-2.7' }).pop()
+        container = self.client.containers.list(filters = { 'name': name }).pop()
         container = self.client.containers.get(container.id)
         result: Tuple[int, Any] = container.exec_run(cmd)
         return eval(result[1].decode('utf-8'))
