@@ -8,6 +8,7 @@ class DockerTestCase(TestCase):
     python manage.py test dockers.tests.tests_docker
     """
 
+    @skipIf(True, 'tested')
     def test_build_dockerfile(self):
         from dockers.module.docker_client import MyDockerClient
         from my_ide.settings import DOCKERFILES_ROOT
@@ -45,3 +46,18 @@ class DockerTestCase(TestCase):
     #         })
     #     )
     #     client.api.start(container.get('Id'))
+
+    def test_docker_exec(self):
+        import docker
+        sample= """python /app/app.py 'def foo(x):
+    for i in range(x):
+        print "%d" %i
+
+foo(10)'"""
+
+        client = docker.DockerClient(base_url = 'unix://var/run/docker_www.sock')
+
+        container = client.containers.list(filters = { 'name': 'python-2.7' }).pop()
+        container = client.containers.get(container.id)
+        result = container.exec_run(sample)
+        print(result)

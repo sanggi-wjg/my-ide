@@ -11,14 +11,20 @@
 <div>
     <h3>USER_CODE</h3>
     <div>
-        <select>
-            <option>Python 2.7</option>
-            <option selected>Python 3.8</option>
+        <label for="user-language"></label>
+        <select id="user-language">
+            <option value="Python2.7">Python2.7</option>
+            <option value="Python3.8" selected>Python3.8</option>
         </select>
         <br>
 
         <label for="user-code"></label>
-        <textarea id="user-code" rows="10"></textarea>
+        <textarea id="user-code" rows="10">
+def foo(x):
+    for i in range(x):
+        print("*"*i)
+foo(10)
+        </textarea>
         <br>
         <input type="button" id="btn-user-code-run" value="RUN">
     </div>
@@ -44,7 +50,8 @@
                 xhr.setRequestHeader('X-CSRFToken', CSRF_TOKEN)
             },
             data: {
-                code: document.getElementById("user-code").value
+                user_language: document.getElementById("user-language").value,
+                user_code: document.getElementById("user-code").value
             },
             statusCode: {
                 200: function (response) {

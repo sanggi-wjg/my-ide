@@ -1,4 +1,4 @@
-from typing import Tuple, Iterable
+from typing import Tuple, Iterable, Any
 
 import docker
 from docker.models.images import Image
@@ -79,3 +79,10 @@ class MyDockerClient:
             # If the server returns an error.
             # If any argument besides ``container`` are provided.
             raise e
+
+    def exec_run_container(self, name: str, cmd: str):
+        # conn = self.get_docker_image_by_name(name)
+        container = self.client.containers.list(filters = { 'name': 'python-2.7' }).pop()
+        container = self.client.containers.get(container.id)
+        result: Tuple[int, Any] = container.exec_run(cmd)
+        return eval(result[1].decode('utf-8'))
