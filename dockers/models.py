@@ -50,10 +50,9 @@ class DockerImage(models.Model):
 
     BUILD_SUCCESS = True
     BUILD_FAILED = False
-    BUILD_IMAGE_SUCCESS_CHOICES = [
-        (BUILD_SUCCESS, 'Success'), (BUILD_FAILED, 'Failed')
-    ]
+    BUILD_IMAGE_SUCCESS_CHOICES = [(BUILD_SUCCESS, 'Success'), (BUILD_FAILED, 'Failed')]
 
+    id = models.BigAutoField(primary_key = True)
     image_name = models.CharField(max_length = 100)
     image_tag = models.CharField(max_length = 100)
     local_port = models.IntegerField(default = 0)
@@ -64,6 +63,8 @@ class DockerImage(models.Model):
     container_is_running = models.IntegerField(null = False, default = BUILD_FAILED, choices = BUILD_IMAGE_SUCCESS_CHOICES)
 
     class Meta:
+        db_table = 'dockers'
+        ordering = ['id', ]
         unique_together = (('image_name', 'image_tag'),)
 
     def __str__(self):

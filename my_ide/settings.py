@@ -32,6 +32,7 @@ SECRET_KEY = read_json(os.path.join(BASE_DIR, 'my_ide', 'secret_key.json'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DEBUG_TOOLBAR = True
 
 ALLOWED_HOSTS = [
     '218.146.5.52'
@@ -48,7 +49,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'dockers',
+
+    "debug_toolbar",
 ]
+
+# DEBUG TOOLBAR
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '218.146.5.41'
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'my_ide.urls'
@@ -111,9 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 

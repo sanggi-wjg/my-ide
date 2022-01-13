@@ -1,0 +1,27 @@
+        <!-- jQuery -->
+        {% load static %}
+        <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{% static 'vendor/popper/popper.min.js' %}"></script>
+        <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="{% static 'vendor/metisMenu/metisMenu.min.js' %}"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="{% static 'vendor/raphael/raphael.min.js' %}"></script>
+        <script src="{% static 'vendor/morrisjs/morris.min.js' %}"></script>
+        <!-- <script src="{% static 'data/morris-data.js' %}"></script> -->
+
+        <script src="{% static 'vendor/datatables/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables/js/dataTables.bootstrap4.min.js' %}"></script>
+        <script src="{% static 'vendor/datatables-responsive/dataTables.responsive.js' %}"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="{% static 'dist/js/sb-admin-2.js' %}"></script>
+        {% comment %}<script src="{% static 'common/common.js' %}"></script>{% endcomment %}
+
+        {% block script_content %} {% endblock %}
+</body>
+</html>

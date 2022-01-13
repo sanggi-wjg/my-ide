@@ -3,14 +3,27 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from django.views import View
+from django.views.generic import ListView
 
+from dockers.models import DockerImage
 from dockers.module.docker_client import MyDockerClient
 
 
 class DockerIndexView(View):
 
     def get(self, request, **kwargs):
-        return render(request, 'docker/index.html')
+        return render(request, 'docker/templates.html')
+
+
+class DockerSearchView(View):
+    page_title = 'Docker 검색'
+    template_name = 'docker/docker_search.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {
+            'page_title': self.page_title,
+            'objects'   : DockerImage.objects.all(),
+        })
 
 
 class DockerCodeRunView(View):

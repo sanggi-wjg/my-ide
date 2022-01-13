@@ -7,6 +7,12 @@ python manage.py migrate
 
 ### docker.sock
 ```shell
+sqlite3
+> open /home/my-ide/db.sqlite3
+```
+
+### docker.sock
+```shell
 # add symbolic link of docker.sock
 ln -s /var/run/docker.sock  /var/run/docker_www.sock
 chown www:www /var/run/docker_www.sock
