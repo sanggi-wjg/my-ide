@@ -29,8 +29,9 @@ def build_dockerfile(docker_json: DockerJson):
 
         # Check success or fail, then update.
         is_built = client.is_exist_docker_image_by_name(f"{image.image_name}-{image.image_tag}")
-        DockerImage.objects.update_build_image_result(image.id, built_result, is_built)
-        if not is_built:
+        if is_built:
+            DockerImage.objects.update_build_image_success(image.id, built_result)
+        else:
             logging.error(f"{dockerfile_info} build failed")
     else:
         logging.info(f"{dockerfile_info} is already built")

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block view_title %}Web-IDE{% endblock %}</title>
+    <title>{% block page_title %}Web-IDE{% endblock %}</title>
 
     {% load static %}
     <link rel="icon" href="{% static 'favicon.ico' %}">
@@ -244,30 +244,24 @@
                         <a href="#"><i class="fa fa-sitemap fa-fw"></i> Dockers <span class="fa arrow"></span></a>
                         <ul class="nav-second-level list-group nested">
                             <li class="list-group-item">
-                                <a href="{% url 'get-docker-search' %}"><i class="fa fa-upload fa-fw"></i> Search</a>
+                                <a href="{% url 'get-docker-search' %}"><i class="fa fa-star fa-fw"></i> List</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#1"><i class=""></i> Load Dockerfiles</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#2"><i class=""></i> Image Build</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="#3"><i class=""></i> Run Container</a>
                             </li>
                         </ul>
                     </li>
                     <li class="list-group-item">
-                        <a href="#"><i class="fa fa-steam-square fa-fw"></i> T002 Business Unit<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-bitcoin fa-fw"></i> Code Snippets<span class="fa arrow"></span></a>
                         <ul class="nav-second-level list-group nested">
                             <li class="list-group-item">
-                                <a href="#" target="_blank"><i class="fa fa-key"></i>v1</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#">Business Units</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li class="list-group-item">
-                        <a href="#"><i class="fa fa-bitcoin fa-fw"></i> T010 Exchangerates<span class="fa arrow"></span></a>
-                        <ul class="nav-second-level list-group nested">
-                            <li class="list-group-item">
-                                <a href="#" target="_blank"><i class="fa fa-key"></i>v1</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="#"> Exchangerates</a>
+                                <a href="#1" target="_blank"><i class="fa fa-key"></i>Snippets</a>
                             </li>
                         </ul>
 

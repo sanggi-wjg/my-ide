@@ -10,6 +10,51 @@
     </div>
     <!-- /.row -->
 
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Language</th>
+                        <th>Version</th>
+                        <th>Local Ports</th>
+                        <th>Image Build</th>
+                        <th>Image Build Result</th>
+                        <th>Container Running</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in objects %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <th>{{ obj.image_name }}</th>
+                            <th>{{ obj.image_tag }}</th>
+                            <td>{{ obj.local_port }}</td>
+                            {% if obj.build_image_success %}
+                                <td>Success</td>
+                            {% else %}
+                                <td>Failed</td>
+                            {% endif %}
+                            {% autoescape off %}
+                                <td>{{ obj.build_image_result|replace_line }}</td>
+                            {% endautoescape %}
+                            {% if obj.container_is_running %}
+                                <td>Success</td>
+                            {% else %}
+                                <td>Failed</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+
 </div>
 <!-- /#page-wrapper -->
 </div>

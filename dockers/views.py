@@ -10,13 +10,14 @@ from dockers.module.docker_client import MyDockerClient
 
 
 class DockerIndexView(View):
+    template_name = 'docker/index.html'
 
-    def get(self, request, **kwargs):
-        return render(request, 'docker/templates.html')
+    def get(self, request):
+        return render(request, self.template_name)
 
 
 class DockerSearchView(View):
-    page_title = 'Docker 검색'
+    page_title = 'Docker list'
     template_name = 'docker/docker_search.html'
 
     def get(self, request):
@@ -28,7 +29,7 @@ class DockerSearchView(View):
 
 class DockerCodeRunView(View):
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         user_language = request.POST.get('user_language')
         user_code = request.POST.get('user_code')
 

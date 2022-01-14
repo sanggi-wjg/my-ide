@@ -1,50 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <link rel="icon" href="{% static 'favicon.ico' %}">
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% include "head.html" %}
 
-<div>
-    <h3>USER_CODE</h3>
+{% block content %}
+<div id="page-wrapper" class="p-4">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">{{ page_title }}</h3>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
     <div>
-        <label for="user-language"></label>
-        <select id="user-language">
-            <option value="Python2.7">Python2.7</option>
-            <option value="Python3.8" selected>Python3.8</option>
-        </select>
-        <br>
+        <h3>USER_CODE</h3>
+        <div>
+            <label for="user-language"></label>
+            <select id="user-language">
+                <option value="Python2.7">Python2.7</option>
+                <option value="Python3.8" selected>Python3.8</option>
+            </select>
+            <br>
 
-        <label for="user-code"></label>
-        <textarea id="user-code" rows="10">
+            <label for="user-code"></label>
+            <textarea id="user-code" rows="10">
 def foo(x):
     for i in range(x):
         print("*"*i)
 foo(10)
-        </textarea>
-        <br>
-        <input type="button" id="btn-user-code-run" value="RUN">
+            </textarea>
+            <br>
+            <input type="button" id="btn-user-code-run" value="RUN">
+        </div>
+
+        <h3>USER_CODE_RUN_RESULT</h3>
+        <pre id="user-code-run-result">
+
+        </pre>
     </div>
 
-    <h3>USER_CODE_RUN_RESULT</h3>
-    <pre id="user-code-run-result">
-
-    </pre>
 </div>
+<!-- /#page-wrapper -->
+</div>
+</div>
+{% endblock %}
 
+
+{% include "footer.html" %}
+
+{% block script_content %}
+
+{% load static %}
 
 {% csrf_token %}
-<script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
     const CSRF_TOKEN = $("input[name=csrfmiddlewaretoken]").val();
 
     $("input#btn-user-code-run").click(function () {
         $.ajax({
             type: 'POST',
-            url: '{% url 'code-run' %}',
+            url: '{% url 'post-docker-code-run' %}',
             accept: 'application/json',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('X-CSRFToken', CSRF_TOKEN)
@@ -68,6 +80,4 @@ foo(10)
         });
     });
 </script>
-
-</body>
-</html>
+{% endblock %}
