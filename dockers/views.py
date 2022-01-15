@@ -3,10 +3,12 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from dockers.models import DockerImage
 from dockers.module.docker_client import MyDockerClient
+from dockers.module.docker_service import crate_dockerfile_info
+from dockers.module.docker_utils import read_dockerfiles_dir_files
 
 
 class DockerIndexView(View):
@@ -16,15 +18,33 @@ class DockerIndexView(View):
         return render(request, self.template_name)
 
 
-class DockerSearchView(View):
+class DockerListView(View):
     page_title = 'Docker list'
-    template_name = 'docker/docker_search.html'
+    template_name = 'docker/docker_list.html'
 
     def get(self, request):
         return render(request, self.template_name, {
             'page_title': self.page_title,
             'objects'   : DockerImage.objects.all(),
         })
+
+
+class DockerDetailView(DetailView):
+    model = DockerImage
+    context_object_name = 'object'
+    template_name = 'docker/docker_detail.html'
+    pk_url_kwarg = 'image_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+
+        dockerfile_info = crate_dockerfile_info(context[self.context_object_name])
+        files_read_results = read_dockerfiles_dir_files(dockerfile_info.dirpath)
+        context['dockerfile'] = files_read_results.get('Dockerfile', '')
+        files_read_results.pop('Dockerfile')
+        context['files'] = files_read_results
+
+        return context
 
 
 class DockerCodeRunView(View):

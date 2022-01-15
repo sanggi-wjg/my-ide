@@ -21,29 +21,25 @@
                         <th>Version</th>
                         <th>Local Ports</th>
                         <th>Image Build</th>
-                        <th>Image Build Result</th>
                         <th>Container Running</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for obj in objects %}
-                        <tr>
+                        <tr onclick="document.location.replace('{% url 'get-docker-detail' obj.id %}')" style="cursor: pointer;">
                             <td>{{ forloop.counter }}</td>
                             <th>{{ obj.image_name }}</th>
                             <th>{{ obj.image_tag }}</th>
                             <td>{{ obj.local_port }}</td>
                             {% if obj.build_image_success %}
-                                <td>Success</td>
+                                <td><span href="#" class="badge badge-success">Success</span></td>
                             {% else %}
-                                <td>Failed</td>
+                                <td><span href="#" class="badge badge-danger">Failed</span></td>
                             {% endif %}
-                            {% autoescape off %}
-                                <td>{{ obj.build_image_result|replace_line }}</td>
-                            {% endautoescape %}
                             {% if obj.container_is_running %}
-                                <td>Success</td>
+                                <td><span href="#" class="badge badge-success">Success</span></td>
                             {% else %}
-                                <td>Failed</td>
+                                <td><span href="#" class="badge badge-danger">Failed</span></td>
                             {% endif %}
                         </tr>
                     {% endfor %}

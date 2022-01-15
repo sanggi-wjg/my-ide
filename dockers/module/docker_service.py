@@ -8,8 +8,7 @@ from dockers.module.docker_vo import DockerfileInfo, DockerJson
 
 def crate_dockerfile_info(image: DockerImage) -> DockerfileInfo:
     dirpath, filepath = get_dockerfile_path(f"{image.image_name}-{image.image_tag}")
-    dockerfile_info = DockerfileInfo(dirpath, filepath, image.image_name, image.image_tag)
-    return dockerfile_info
+    return DockerfileInfo(dirpath, filepath, image.image_name, image.image_tag)
 
 
 def build_dockerfile(docker_json: DockerJson):
@@ -32,6 +31,7 @@ def build_dockerfile(docker_json: DockerJson):
         if is_built:
             DockerImage.objects.update_build_image_success(image.id, built_result)
         else:
+            DockerImage.objects.update_build_image_failed(image.id, built_result)
             logging.error(f"{dockerfile_info} build failed")
     else:
         logging.info(f"{dockerfile_info} is already built")
@@ -40,4 +40,7 @@ def build_dockerfile(docker_json: DockerJson):
 def run_docker_image(image: DockerImage):
     client = MyDockerClient()
     is_success = client.create_container_and_run(image)
-    DockerImage.objects.update_container_running_result(image.id, is_success)
+    if is_success:
+        DockerImage.objects.update_container_running_success(image.id, is_success)
+    else:
+        DockerImage.objects.update_container_running_failed(image.id, is_success)

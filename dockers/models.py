@@ -26,6 +26,12 @@ class DockerImageQuerySet(models.QuerySet):
 
         return image
 
+    def get_by_id(self, image_id: int):
+        try:
+            return self.get(id = image_id)
+        except DockerImage.DoesNotExist:
+            raise Exception(f"docker image id({image_id}) does not exist")
+
     def publish(self, docker_json: DockerJson) -> QuerySet['DockerImage']:
         try:
             image = self.get(
@@ -49,11 +55,11 @@ class DockerImageQuerySet(models.QuerySet):
         )
         return rows
 
-    def update_build_image_failed(self, image_id: int):
+    def update_build_image_failed(self, image_id: int, result: str):
         rows = self.filter(
             id = image_id
         ).update(
-            build_image_result = None,
+            build_image_result = result,
             build_image_success = False
         )
         return rows

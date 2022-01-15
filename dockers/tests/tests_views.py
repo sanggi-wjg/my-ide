@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 
-class PostCodeToFlaskTestCase(TestCase):
+class DockersViewsTestCase(TestCase):
     """
     python manage.py test docker.tests.tests_util
     """
