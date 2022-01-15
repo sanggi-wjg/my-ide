@@ -11,13 +11,6 @@ from dockers.module.docker_service import crate_dockerfile_info
 from dockers.module.docker_utils import read_dockerfiles_dir_files
 
 
-class DockerIndexView(View):
-    template_name = 'docker/index.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-
-
 class DockerListView(View):
     page_title = 'Docker list'
     template_name = 'docker/docker_list.html'
@@ -40,6 +33,7 @@ class DockerDetailView(DetailView):
 
         dockerfile_info = crate_dockerfile_info(context[self.context_object_name])
         files_read_results = read_dockerfiles_dir_files(dockerfile_info.dirpath)
+
         context['dockerfile'] = files_read_results.get('Dockerfile', '')
         files_read_results.pop('Dockerfile')
         context['files'] = files_read_results
@@ -54,7 +48,6 @@ class DockerCodeRunView(View):
         user_code = request.POST.get('user_code')
 
         result = request_result(user_language, user_code)
-        print(result)
         return JsonResponse({ 'data': result })
 
 
