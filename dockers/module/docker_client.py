@@ -69,7 +69,7 @@ class MyDockerClient:
         })
 
     def create_container_and_run(self, image: DockerImage):
-        name = f"{image.image_name}-{image.image_tag}"
+        name = image.image_fullname
         try:
             logging.info(f"Docker run image : {name}")
 

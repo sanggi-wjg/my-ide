@@ -103,5 +103,13 @@ class DockerImage(models.Model):
         ordering = ['id', ]
         unique_together = (('image_name', 'image_tag'),)
 
+    @property
+    def image_fullname(self):
+        return f"{self.image_name}-{self.image_tag}"
+
+    @property
+    def sub_folder_name(self):
+        return f"{self.image_name}_{self.image_tag}"
+
     def __str__(self):
         return f"<DockerImage object {self.id}> {self.image_name} - {self.image_tag} build: {self.build_image_success} running: {self.container_is_running}"

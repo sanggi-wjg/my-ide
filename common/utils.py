@@ -1,21 +1,45 @@
 import os
 import random
 import string
-from typing import Generator
+from typing import Generator, List
 
-
-def get_directories(dirpath: str):
-    filenames = []
-    for root, dirs, files in os.walk(dirpath):
-        print(root, dirs, files)
-        if files:
-            filenames.extend(files)
-    return filenames
+from dockers.models import DockerImage
 
 
 def validate_dir(dirpath: str):
+    """
+
+    :param dirpath:
+    :type dirpath:
+    :return:
+    :rtype:
+    """
     if not os.path.exists(dirpath):
         os.mkdir(dirpath)
+
+
+def get_directories(images: List['DockerImage'], dirpath_root: str) -> dict:
+    """
+
+    :param images:
+    :type images:
+    :param dirpath_root:
+    :type dirpath_root:
+    :return:
+    :rtype:
+    """
+    directories = { }
+
+    for image in images:
+        sub_dir = image.sub_folder_name
+        dirpath = os.path.join(dirpath_root, sub_dir)
+        directories.setdefault(sub_dir, [])
+
+        for root, dirs, files in os.walk(dirpath):
+            for d in dirs:
+                directories[sub_dir].append(d)
+
+    return directories
 
 
 def get_dir_filenames(dirpath: str) -> Generator:

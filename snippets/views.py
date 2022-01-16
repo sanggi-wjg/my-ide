@@ -14,9 +14,9 @@ class SnippetsSourceFolderView(View):
         self.dirpath = SNIPPET_ROOT
 
     def get(self, request):
-        validate_dir(self.dirpath)
-        files = get_directories(self.dirpath)
-        print(files)
+        # validate_dir(self.dirpath)
+        # files = get_directories(self.dirpath)
+        # print(files)
 
         return JsonResponse({
             'msg': 'success'

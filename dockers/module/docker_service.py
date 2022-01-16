@@ -7,7 +7,7 @@ from dockers.module.docker_vo import DockerfileInfo, DockerJson
 
 
 def crate_dockerfile_info(image: DockerImage) -> DockerfileInfo:
-    dirpath, filepath = get_dockerfile_path(f"{image.image_name}-{image.image_tag}")
+    dirpath, filepath = get_dockerfile_path(image.image_fullname)
     return DockerfileInfo(dirpath, filepath, image.image_name, image.image_tag)
 
 
@@ -20,14 +20,14 @@ def build_dockerfile(docker_json: DockerJson):
     client = MyDockerClient()
 
     # if is build in the past, do not build again
-    is_built = client.is_exist_docker_image_by_name(f"{image.image_name}-{image.image_tag}")
+    is_built = client.is_exist_docker_image_by_name(image.image_fullname)
     if not is_built:
         # try build
         built_image, built_result = client.build_dockerfile(dockerfile_info)
         # print('id:', built_image.id, 'tags:', built_image.tags, 'labels:', built_image.labels)
 
         # Check success or fail, then update.
-        is_built = client.is_exist_docker_image_by_name(f"{image.image_name}-{image.image_tag}")
+        is_built = client.is_exist_docker_image_by_name(image.image_fullname)
         if is_built:
             DockerImage.objects.update_build_image_success(image.id, built_result)
         else:
