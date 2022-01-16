@@ -1,6 +1,7 @@
 import os
-from typing import Tuple, List, Generator
+from typing import Tuple, List
 
+from common.utils import get_dir_filenames, read_file_lines
 from dockers.exceptions import DockerfileIsNotExist
 from dockers.module.docker_vo import DockerJson
 from my_ide.settings import DOCKERFILES_ROOT, DOCKERS
@@ -31,35 +32,6 @@ def get_dockerfile_path(dir_path: str) -> Tuple[str, str]:
         raise DockerfileIsNotExist(f"{dockerfile_path} is not exist")
 
     return dockerfile_dir, dockerfile_path
-
-
-def get_dir_filenames(dirpath: str) -> Generator:
-    """
-    :param dirpath: directory 경로
-    :return: 파일 이름들
-    :rtype: Generator[str]
-    """
-    # load filenames
-    return (f for f in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, f)))
-    # filenames = []
-    # for root, dirs, files in os.walk(dirpath):
-    #     print(root, dirs, files)
-    #     if files and len(dirs) == 0:
-    #         filenames.extend(files)
-    # return filenames
-
-
-def read_file_lines(filepath: str) -> str:
-    """
-    :param filepath: 파일 경로
-    :return: 파일 내용
-    :rtype: str
-    """
-    lines = []
-    with open(filepath, 'r') as file:
-        for line in file.readlines():
-            lines.append(line)
-    return ''.join(lines)
 
 
 def read_dockerfiles_dir_files(dirpath: str) -> dict:

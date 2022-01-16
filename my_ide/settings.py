@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'home',
+    'common',
     'dockers',
 
     "debug_toolbar",
@@ -200,4 +201,4 @@ DOCKERS_PATH = os.path.join(DOCKERFILES_ROOT, "dockers.json")
 DOCKERS = read_json(DOCKERS_PATH)
 
 # source code snippets directory
-SNIPPET_ROOT = BASE_DIR / "snippets"
+SNIPPET_ROOT = BASE_DIR / "snippets_source"

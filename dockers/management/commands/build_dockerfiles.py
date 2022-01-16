@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from dockers.decorators import catch_error
+from common.decorators import catch_error
 from dockers.exceptions import DockerfileIsNotExist
 from dockers.module.docker_service import build_dockerfile
 from dockers.module.docker_utils import get_dockers_json

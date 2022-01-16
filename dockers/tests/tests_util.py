@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from dockers.models import DockerImage
 from dockers.module.docker_service import crate_dockerfile_info
-from dockers.module.docker_utils import read_dockerfiles_dir_files, get_dir_filenames
+from dockers.module.docker_utils import read_dockerfiles_dir_files
 from dockers.module.docker_vo import DockerJson
 
 
