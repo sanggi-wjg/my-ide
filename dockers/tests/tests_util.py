@@ -1,10 +1,8 @@
-import os.path
-
 from django.test import TestCase
 
 from dockers.models import DockerImage
 from dockers.module.docker_service import crate_dockerfile_info
-from dockers.module.docker_utils import read_dockerfiles_dir_files, walk_dockerfiles_dir_get_filenames
+from dockers.module.docker_utils import read_dockerfiles_dir_files, get_dir_filenames
 from dockers.module.docker_vo import DockerJson
 
 
@@ -38,7 +36,7 @@ class ReadDockerfilesTestCase(TestCase):
         dirpath = dockerfile_info.dirpath
 
         # when
-        # files = walk_dockerfiles_dir_get_filenames(dirpath)
+        # files = get_dir_filenames(dirpath)
         # print(files)
         files_read_result = read_dockerfiles_dir_files(dirpath)
         for k, v in files_read_result.items():
@@ -57,7 +55,7 @@ class ReadDockerfilesTestCase(TestCase):
         dirpath = dockerfile_info.dirpath
 
         # when
-        # files = walk_dockerfiles_dir_get_filenames(dirpath)
+        # files = get_dir_filenames(dirpath)
         # print(files)
         files_read_result = read_dockerfiles_dir_files(dirpath)
         for k, v in files_read_result.items():

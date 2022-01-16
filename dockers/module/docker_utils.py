@@ -1,5 +1,4 @@
 import os
-from os.path import isfile, join
 from typing import Tuple, List, Generator
 
 from dockers.exceptions import DockerfileIsNotExist
@@ -34,11 +33,11 @@ def get_dockerfile_path(dir_path: str) -> Tuple[str, str]:
     return dockerfile_dir, dockerfile_path
 
 
-def walk_dockerfiles_dir_get_filenames(dirpath: str) -> Generator:
+def get_dir_filenames(dirpath: str) -> Generator:
     """
     :param dirpath: directory 경로
     :return: 파일 이름들
-    :rtype: Generator
+    :rtype: Generator[str]
     """
     # load filenames
     return (f for f in os.listdir(dirpath) if os.path.isfile(os.path.join(dirpath, f)))
@@ -70,7 +69,7 @@ def read_dockerfiles_dir_files(dirpath: str) -> dict:
     :rtype: dict
     """
     result = { }
-    for name in walk_dockerfiles_dir_get_filenames(dirpath):
+    for name in get_dir_filenames(dirpath):
         result.setdefault(name, read_file_lines(os.path.join(dirpath, name)))
 
     return result

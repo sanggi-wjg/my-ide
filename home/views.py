@@ -4,7 +4,7 @@ from django.views import View
 
 
 class HomeIndexView(View):
-    page_title = 'User Code'
+    page_title = 'Run Your Code!'
     template_name = 'home/index.html'
 
     def get(self, request):

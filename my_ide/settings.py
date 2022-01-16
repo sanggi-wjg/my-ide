@@ -190,6 +190,14 @@ LOGGING = {
     },
 }
 
+########################################
+# Below Custom Setting values
+########################################
+
+# about dockerfile
 DOCKERFILES_ROOT = os.path.join(BASE_DIR, "dockerfiles")
 DOCKERS_PATH = os.path.join(DOCKERFILES_ROOT, "dockers.json")
 DOCKERS = read_json(DOCKERS_PATH)
+
+# source code snippets directory
+SNIPPET_ROOT = BASE_DIR / "snippets"
