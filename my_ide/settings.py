@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'home',
     'common',
     'dockers',
+    'ide',
+    'snippets',
 
     "debug_toolbar",
 ]

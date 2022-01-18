@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('docker/', include('dockers.urls')),
     path('snippet/', include('snippets.urls')),
+    path('', include('ide.urls')),
     
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
