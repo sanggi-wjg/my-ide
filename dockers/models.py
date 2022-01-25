@@ -46,7 +46,7 @@ class DockerImageQuerySet(models.QuerySet):
             )
         return image
 
-    def update_build_image_success(self, image_id: int, result: str):
+    def update_build_image_result_success(self, image_id: int, result: str):
         rows = self.filter(
             id = image_id
         ).update(
@@ -55,7 +55,7 @@ class DockerImageQuerySet(models.QuerySet):
         )
         return rows
 
-    def update_build_image_failed(self, image_id: int, result: str):
+    def update_build_image_result_failed(self, image_id: int, result: str):
         rows = self.filter(
             id = image_id
         ).update(

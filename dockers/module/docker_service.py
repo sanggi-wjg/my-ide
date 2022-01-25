@@ -17,11 +17,11 @@ def build_dockerfile(docker_json: DockerJson):
     dockerfile_info = crate_dockerfile_info(image)
 
     # build dockerfile
-    client = MyDockerClient()
-
     # if is build in the past, do not build again
-    is_built = client.is_exist_docker_image_by_name(image.image_fullname)
-    if not is_built:
+    client = MyDockerClient()
+    is_exist_image = client.is_exist_docker_image_by_name(image.image_fullname)
+
+    if not is_exist_image:
         # try build
         built_image, built_result = client.build_dockerfile(dockerfile_info)
         # print('id:', built_image.id, 'tags:', built_image.tags, 'labels:', built_image.labels)
@@ -29,9 +29,9 @@ def build_dockerfile(docker_json: DockerJson):
         # Check success or fail, then update.
         is_built = client.is_exist_docker_image_by_name(image.image_fullname)
         if is_built:
-            DockerImage.objects.update_build_image_success(image.id, built_result)
+            DockerImage.objects.update_build_image_result_success(image.id, built_result)
         else:
-            DockerImage.objects.update_build_image_failed(image.id, built_result)
+            DockerImage.objects.update_build_image_result_failed(image.id, built_result)
             logging.error(f"{dockerfile_info} build failed")
     else:
         logging.info(f"{dockerfile_info} is already built")
@@ -40,6 +40,7 @@ def build_dockerfile(docker_json: DockerJson):
 def run_docker_image(image: DockerImage):
     client = MyDockerClient()
     is_success = client.create_container_and_run(image)
+
     if is_success:
         DockerImage.objects.update_container_running_success(image.id, is_success)
     else:
