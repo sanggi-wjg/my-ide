@@ -72,14 +72,7 @@ class MyDockerClient:
         name = image.image_fullname
         try:
             logging.info(f"Docker run image : {name}")
-
-            if image.local_port:
-                container = self.client.api.create_container(
-                    image = name, detach = True, name = name, ports = [image.local_port],
-                    host_config = self.get_create_host_config(image.local_port)
-                )
-            else:
-                container = self.client.api.create_container(image = name, detach = True, name = name)
+            self.create_container(image)
 
         except docker.errors.ImageNotFound as e:
             # If the specified image does not exist.
@@ -99,6 +92,17 @@ class MyDockerClient:
             raise e
 
         return True
+
+    def create_container(self, image:DockerImage) -> dict:
+        name = image.image_fullname
+        if image.local_port:
+            container = self.client.api.create_container(
+                image = name, detach = True, name = name, ports = [image.local_port],
+                host_config = self.get_create_host_config(image.local_port)
+            )
+        else:
+            container = self.client.api.create_container(image = name, detach = True, name = name)
+        return container
 
     def exec_run_container(self, name: str, cmd: str):
         # conn = self.get_docker_image_by_name(name)

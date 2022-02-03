@@ -5,7 +5,6 @@ from typing import Callable, Tuple
 from django.http import JsonResponse
 
 from common.exceptions import brief_except
-from common.utils import valid_dir
 
 
 def catch_error(catch_exceptions: Tuple):

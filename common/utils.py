@@ -8,7 +8,7 @@ from dockers.models import DockerImage
 
 def validate_dir(dirpath: str):
     """
-
+    dir 없으면 dir 생성
     :param dirpath:
     :type dirpath:
     :return:
@@ -20,7 +20,7 @@ def validate_dir(dirpath: str):
 
 def get_directories(images: List['DockerImage'], dirpath_root: str) -> dict:
     """
-
+    directory 목록 가져오기
     :param images:
     :type images:
     :param dirpath_root:
@@ -44,6 +44,7 @@ def get_directories(images: List['DockerImage'], dirpath_root: str) -> dict:
 
 def get_dir_filenames(dirpath: str) -> Generator:
     """
+    dir 내 files 가져 오기
     :param dirpath: directory 경로
     :return: 파일 이름들
     :rtype: Generator[str]
@@ -53,6 +54,7 @@ def get_dir_filenames(dirpath: str) -> Generator:
 
 def read_file_lines(filepath: str) -> str:
     """
+    파일 line 읽기
     :param filepath: 파일 경로
     :return: 파일 내용
     :rtype: str
@@ -65,4 +67,11 @@ def read_file_lines(filepath: str) -> str:
 
 
 def id_generator(size: int = 6, text: str = string.ascii_uppercase + string.digits) -> str:
+    """
+    id gen
+    :param size: 길이
+    :param text: 문자열
+    :return: ID Generated
+    :rtype: str
+    """
     return ''.join(random.choice(text) for _ in range(size))
